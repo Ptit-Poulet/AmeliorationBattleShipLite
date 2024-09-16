@@ -29,23 +29,38 @@ namespace BattleshipLite_Serveur
 
                     //Début partie
                     Partie partie = new();
-                    Console.WriteLine("Entrez les dimension du plateau de jeu.\n");
-                    int GetDimension(string dimensionName)
-                    {
-                        int dimension;
-                        do
-                        {
-                            Console.WriteLine($"Veuillez entrer la {dimensionName} (2 à 26) :");
-                        } while (!int.TryParse(Console.ReadLine(), out dimension) || dimension < 2 || dimension > 26);
-                        return dimension;
-                    }
+                    bool confirmation = false;
+                    int hauteur = 0, largeur = 0;
 
-                    int hauteur = GetDimension("hauteur");
-                    int largeur = GetDimension("largeur");
+                    //TODO: COnfirmation dimension avec client
+                    do
+                    {
+                        Console.WriteLine("Entrez les dimensions du plateau de jeu.\n");
+                        int GetDimension(string dimensionName)
+                        {
+                            int dimension;
+                            do
+                            {
+                                Console.WriteLine($"Veuillez entrer la {dimensionName} (2 à 26) :");
+                            } while (!int.TryParse(Console.ReadLine(), out dimension) || dimension < 2 || dimension > 26);
+                            return dimension;
+                        }
+
+                        hauteur = GetDimension("hauteur");
+                        largeur = GetDimension("largeur");
+
+                        // Envoyer le plateau du serveur au client
+                        //Le break permet de détecter que le client s'est déconnecté
+                        if (!connexion.Envoi(connexion._handler, JsonSerializer.Serialize(partie.Joueurs[0].Plateau)))
+                        {
+                            break;
+                        }
+                    } while (!confirmation);
 
                     // Démarrer la partie 
                     partie.Demarrer(ref partie, hauteur, largeur);
 
+                    //TODO: avoir 3 bateaux
                     //Placement bateau
                     Bateau bateau = new("Kayak", new List<Case>());
 
@@ -102,8 +117,7 @@ namespace BattleshipLite_Serveur
                     Console.Clear();
                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
 
-
-
+                    //TODO: Si un joueur touche il rejoue
                     // Jeu
                     Joueur? winner;
                     while (partie.EnCours)
@@ -142,7 +156,7 @@ namespace BattleshipLite_Serveur
                                     Console.WriteLine("Au tour du client.");
                                     partie.Joueurs[0].VerifCoup(connexion, partie.Joueurs[0].Plateau);
                                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
-                                    
+
                                 }
                             }
                         }

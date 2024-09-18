@@ -92,7 +92,7 @@ namespace BattleshipLite_Serveur
 
                         if (Partie.IsValidCoordinate(devant) && Partie.IsValidCoordinate(derriere))
                         {
-                            estPlace = partie.Joueurs[0].PlacerBateaux(bateau, devant, derriere);
+                            estPlace = partie.Joueurs[0].PlacerBateauEnI(bateau, devant, derriere);
                             if (!estPlace)
                             {
                                 Console.WriteLine("Erreur de placement du bateau. Veuillez réessayer.");

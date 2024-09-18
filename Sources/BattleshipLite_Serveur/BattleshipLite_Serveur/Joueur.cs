@@ -143,9 +143,9 @@ namespace BattleshipLite_Serveur
         /// <summary>
         /// Place les bateaux sur le plateau
         /// </summary>
-        public bool PlacerBateaux(Bateau bateau, string case1, string case2)
+        public bool PlacerBateauEnI(Bateau bateau, string case1, string case2)
         {
-            //TODO: plus que deux cases
+            //TODO: Bateau en \ / et T T(inversé et coté) 
             Partie.ConvertToGrid(case1, out int x1, out int y1);
             Case _case1 = new Case(x1, y1);
 

@@ -32,7 +32,7 @@ namespace BattleshipLite_Serveur
                     bool confirmation = false;
                     int hauteur = 0, largeur = 0;
 
-                    
+
                     do
                     {
                         Console.WriteLine("Entrez les dimensions du plateau de jeu.\n");
@@ -56,21 +56,21 @@ namespace BattleshipLite_Serveur
                             break;
                         }
                         string reponse = connexion.Recois(connexion._handler);
-                        reponse = reponse.Remove(1,2);
-                        
-                        if (reponse.ToUpper()== "O")
+                        reponse = reponse.Remove(1, 2);
+
+                        if (reponse.ToUpper() == "O")
                         {
                             confirmation = true;
                         }
 
-                        if(reponse.ToUpper() == "N")
+                        if (reponse.ToUpper() == "N")
                         {
                             Console.WriteLine($"Le client n'accepte pas ces dimensions.");
 
                         }
 
                     } while (!confirmation);
-                        Console.WriteLine("Les dimensions ont été confirmé !\n");
+                    Console.WriteLine("Les dimensions ont été confirmé !\n");
 
                     // Démarrer la partie 
                     partie.Demarrer(ref partie, hauteur, largeur);
@@ -132,7 +132,6 @@ namespace BattleshipLite_Serveur
                     Console.Clear();
                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
 
-                    //TODO: #2 Si un joueur touche il rejoue
                     // Jeu
                     Joueur? winner;
                     while (partie.EnCours)
@@ -143,41 +142,67 @@ namespace BattleshipLite_Serveur
 
                             bool coupValide = false;
                             string coup;
+                            Coup ContinueTour = new();
 
                             //Envoi coup
                             Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
                             if (!partie.CheckIfWinner(partie, out winner))
                             {
+
                                 do
                                 {
-                                    Affichage.PrintLegende();
-                                    Console.WriteLine("Jouer votre coup: ");
-                                    coup = Console.ReadLine();
 
-                                    coupValide = Partie.IsValidCoordinate(coup) && partie.Joueurs[0].JouerCoup(connexion, partie.Joueurs[1].Plateau, coup);
-
-
-                                    if (!coupValide)
+                                    do
                                     {
-                                        Console.WriteLine("Coup invalide.");
+                                        Affichage.PrintLegende();
+                                        Console.WriteLine("Jouer votre coup: ");
+                                        coup = Console.ReadLine();
+
+                                        coupValide = Partie.IsValidCoordinate(coup) && partie.Joueurs[0].JouerCoup(connexion, partie.Joueurs[1].Plateau, coup);
+
+
+                                        if (!coupValide)
+                                        {
+                                            Console.WriteLine("Coup invalide.");
+                                        }
+
+                                    } while (!coupValide);
+
+                                    Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
+                                    ContinueTour = partie.Joueurs[0].Coups.Last();
+
+                                    if (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner))
+                                    {
+                                        Console.WriteLine("C'est encore votre tour.");
                                     }
 
-                                } while (!coupValide);
+                                } while (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner));
 
-                                Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
                                 if (!partie.CheckIfWinner(partie, out winner))
                                 {
-                                    //Recois coup client
-                                    Console.WriteLine("Au tour du client.");
-                                    partie.Joueurs[0].VerifCoup(connexion, partie.Joueurs[0].Plateau);
-                                    Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+
+                                    do
+                                    {
+
+                                        //Recois coup client
+                                        Console.WriteLine("Au tour du client.");
+                                        partie.Joueurs[0].VerifCoup(connexion, partie.Joueurs[0].Plateau, partie.Joueurs[1].Coups);
+                                        Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+
+                                        ContinueTour = partie.Joueurs[1].Coups.Last();
+
+                                        if (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner))
+                                        {
+                                            Console.WriteLine("C'est encore le tour du client.");
+                                        }
+                                    } while (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner));
 
                                 }
                             }
                         }
                         else
                         {
-
+                            Console.Clear();
                             Affichage.MessageVictoire(winner, partie);
                             partie.EnCours = false;
                         }

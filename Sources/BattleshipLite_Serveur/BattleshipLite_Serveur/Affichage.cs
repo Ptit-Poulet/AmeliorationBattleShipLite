@@ -172,7 +172,9 @@ namespace BattleshipLite_Serveur
         /// <param name="partie"></param>
         public static void MessageVictoire(Joueur winner, Partie partie)
         {
-            Console.Clear();
+            
+            PrintMonPlateau(partie.Joueurs[0].Plateau);
+            PrintPlateauEnemi(partie.Joueurs[1].Plateau);
             if (winner == partie.Joueurs[0])
             {
                 ColorString($"\n\nVous avez gagné ! Tous les bateaux de votre adversaire sont coulés !\n", ConsoleColor.Green);

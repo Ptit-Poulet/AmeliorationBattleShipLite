@@ -109,7 +109,7 @@ namespace BattleshipLite_Serveur
             }
         }
         /// <summary>
-        /// Valide la coordonnée
+        /// Valide la coordonnée 
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>

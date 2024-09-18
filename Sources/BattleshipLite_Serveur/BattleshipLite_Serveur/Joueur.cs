@@ -61,8 +61,8 @@ namespace BattleshipLite_Serveur
 
 
             // Envoi du coup au serveur
-            
-            if(!connexion.Envoi(connexion._handler, JsonSerializer.Serialize<Coup>(coupServeur)))
+
+            if (!connexion.Envoi(connexion._handler, JsonSerializer.Serialize<Coup>(coupServeur)))
             {
                 return false;
             }
@@ -103,7 +103,7 @@ namespace BattleshipLite_Serveur
             }
             return true;
         }
-        public void VerifCoup(Connexion connexion, Plateau monPlateau)
+        public void VerifCoup(Connexion connexion, Plateau monPlateau, List<Coup> CoupsEnnemi)
         {
 
             // Réception du coup du serveur
@@ -117,27 +117,28 @@ namespace BattleshipLite_Serveur
             monPlateau.Grille[coupClient.Case.X][coupClient.Case.Y].ToucheCase();
 
 
-                foreach (Bateau bateau in monPlateau.Bateaux)
+            foreach (Bateau bateau in monPlateau.Bateaux)
+            {
+                Case caseTouchee = bateau.Positions.FirstOrDefault(_case => _case.X == coupClient.Case.X && _case.Y == coupClient.Case.Y);
+                if (caseTouchee != null)
                 {
-                    Case caseTouchee = bateau.Positions.FirstOrDefault(_case => _case.X == coupClient.Case.X && _case.Y == coupClient.Case.Y);
-                    if (caseTouchee != null)
-                    {
-                        caseTouchee.ToucheCase();
-                        Console.WriteLine("L'ennemi à touché votre bateau.");
-                        coupClient.EstReussi = true;
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("L'ennemi à tiré dans l'eau");
-                    }
+                    caseTouchee.ToucheCase();
+                    Console.WriteLine("L'ennemi à touché votre bateau.");
+                    coupClient.EstReussi = true;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("L'ennemi à tiré dans l'eau");
+                }
 
-               
+
             }
 
+            CoupsEnnemi.Add(coupClient);
             // Envoi de la réponse au serveur
             connexion.Envoi(connexion._handler, JsonSerializer.Serialize<Coup>(coupClient));
-           
+
         }
         /// <summary>
         /// Place les bateaux sur le plateau
@@ -184,7 +185,7 @@ namespace BattleshipLite_Serveur
         }
         public bool IsPlacementValide(int x, int y)
         {
-            if (x >= 0 && x < Plateau.Hauteur&& y >= 0 && y < Plateau.Largeur)
+            if (x >= 0 && x < Plateau.Hauteur && y >= 0 && y < Plateau.Largeur)
             {
                 return true;
             }

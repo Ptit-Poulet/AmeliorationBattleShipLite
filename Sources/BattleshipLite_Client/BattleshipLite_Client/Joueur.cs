@@ -96,7 +96,7 @@ namespace BattleshipLite_Client
             }
             return true;
         }
-        public void VerifCoup(Connexion connexion, Plateau monPlateau)
+        public void VerifCoup(Connexion connexion, Plateau monPlateau, List<Coup> CoupsEnnemi)
 
         {
 
@@ -122,6 +122,7 @@ namespace BattleshipLite_Client
 
             }
 
+            CoupsEnnemi.Add(coupServeur);
             // Envoi de la réponse au serveur
             connexion.Envoi(connexion._sender, JsonSerializer.Serialize<Coup>(coupServeur));
         }

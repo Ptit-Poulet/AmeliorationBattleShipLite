@@ -32,7 +32,7 @@ namespace BattleshipLite_Serveur
                     bool confirmation = false;
                     int hauteur = 0, largeur = 0;
 
-                    //TODO: #1 Confirmation dimension avec client
+                    
                     do
                     {
                         Console.WriteLine("Entrez les dimensions du plateau de jeu.\n");
@@ -56,8 +56,9 @@ namespace BattleshipLite_Serveur
                             break;
                         }
                         string reponse = connexion.Recois(connexion._handler);
-                        reponse.Remove(2); //TODO il reste encore le \n
-                        if(reponse.ToUpper() == "O")
+                        reponse = reponse.Remove(1,2);
+                        
+                        if (reponse.ToUpper()== "O")
                         {
                             confirmation = true;
                         }

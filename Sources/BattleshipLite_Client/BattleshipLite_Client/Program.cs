@@ -39,6 +39,7 @@ namespace BattleshipLite_Client
                 //Début partie
                 Thread.Sleep(1000);
                 Console.WriteLine("le serveur défini les dimensions du plateau de jeu...");
+
                 Partie partie = new();
                 Bateau bateau = new("Kayak", new List<Case>());
 
@@ -117,10 +118,23 @@ namespace BattleshipLite_Client
 
                     if (!partie.CheckIfWinner(partie, out winner))
                     {
-                        //Recois coup serveur
-                        Console.WriteLine("Au tour du serveur.");
-                        partie.Joueurs[0].VerifCoup(conn, partie.Joueurs[0].Plateau);
-                        Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                        Coup ContinueTour = new();
+
+
+                        do
+                        {
+                            //Recois coup serveur
+                            Console.WriteLine("Au tour du serveur.");
+                            partie.Joueurs[0].VerifCoup(conn, partie.Joueurs[0].Plateau, partie.Joueurs[1].Coups);
+
+                            ContinueTour = partie.Joueurs[1].Coups.Last();
+
+                            if (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner))
+                            {
+                                Console.WriteLine("C'est encore le tour du serveur.");
+                            }
+                            Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                        } while (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner));
 
                         if (!partie.CheckIfWinner(partie, out winner))
                         {
@@ -130,32 +144,44 @@ namespace BattleshipLite_Client
                             //Envoi coup
                             Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
 
-
-                            if (!partie.CheckIfWinner(partie, out winner))
+                            do
                             {
-                                do
+
+                                if (!partie.CheckIfWinner(partie, out winner))
                                 {
-                                    Affichage.PrintLegende();
-                                    Console.WriteLine("Jouez votre coup: ");
 
-                                    coup = Console.ReadLine();
-
-                                    coupValide = Partie.IsValidCoordinate(coup) && partie.Joueurs[0].JouerCoup(conn, partie.Joueurs[1].Plateau, coup);
-                                    if (!coupValide)
+                                    do
                                     {
-                                        Console.WriteLine("Coup invalide.");
-                                    }
+                                        Affichage.PrintLegende();
+                                        Console.WriteLine("Jouez votre coup: ");
 
-                                } while (!coupValide);
-                            }
+                                        coup = Console.ReadLine();
 
+                                        coupValide = Partie.IsValidCoordinate(coup) && partie.Joueurs[0].JouerCoup(conn, partie.Joueurs[1].Plateau, coup);
+                                        if (!coupValide)
+                                        {
+                                            Console.WriteLine("Coup invalide.");
+                                        }
 
-                            Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
+                                    } while (!coupValide);
+                                }
+
+                                Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
+
+                                ContinueTour = partie.Joueurs[0].Coups.Last();
+
+                                if (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner))
+                                {
+                                    Console.WriteLine("C'est encore votre tour.");
+                                }
+
+                            } while (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner));
                         }
                     }
                     else
                     {
 
+                        Console.Clear();
                         Affichage.MessageVictoire(winner, partie);
                         partie.EnCours = false;
                     }

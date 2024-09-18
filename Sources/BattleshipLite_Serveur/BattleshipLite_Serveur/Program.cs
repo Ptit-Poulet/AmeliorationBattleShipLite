@@ -29,23 +29,53 @@ namespace BattleshipLite_Serveur
 
                     //Début partie
                     Partie partie = new();
-                    Console.WriteLine("Entrez les dimension du plateau de jeu.\n");
-                    int GetDimension(string dimensionName)
-                    {
-                        int dimension;
-                        do
-                        {
-                            Console.WriteLine($"Veuillez entrer la {dimensionName} (2 à 26) :");
-                        } while (!int.TryParse(Console.ReadLine(), out dimension) || dimension < 2 || dimension > 26);
-                        return dimension;
-                    }
+                    bool confirmation = false;
+                    int hauteur = 0, largeur = 0;
 
-                    int hauteur = GetDimension("hauteur");
-                    int largeur = GetDimension("largeur");
+                    
+                    do
+                    {
+                        Console.WriteLine("Entrez les dimensions du plateau de jeu.\n");
+                        int GetDimension(string dimensionName)
+                        {
+                            int dimension;
+                            do
+                            {
+                                Console.WriteLine($"Veuillez entrer la {dimensionName} (2 à 26) :");
+                            } while (!int.TryParse(Console.ReadLine(), out dimension) || dimension < 2 || dimension > 26);
+                            return dimension;
+                        }
+
+                        hauteur = GetDimension("hauteur");
+                        largeur = GetDimension("largeur");
+
+                        Console.WriteLine($"Envoi d'une validation des dimensions au client.");
+                        // Envoyer les dimensions du serveur au client
+                        if (!connexion.Envoi(connexion._handler, $"Est-ce qu'un plateau de {hauteur} par {largeur} vous convient ? [O/N]"))
+                        {
+                            break;
+                        }
+                        string reponse = connexion.Recois(connexion._handler);
+                        reponse = reponse.Remove(1,2);
+                        
+                        if (reponse.ToUpper()== "O")
+                        {
+                            confirmation = true;
+                        }
+
+                        if(reponse.ToUpper() == "N")
+                        {
+                            Console.WriteLine($"Le client n'accepte pas ces dimensions.");
+
+                        }
+
+                    } while (!confirmation);
+                        Console.WriteLine("Les dimensions ont été confirmé !\n");
 
                     // Démarrer la partie 
                     partie.Demarrer(ref partie, hauteur, largeur);
 
+                    //TODO: #3 avoir 3 bateaux
                     //Placement bateau
                     Bateau bateau = new("Kayak", new List<Case>());
 
@@ -102,8 +132,7 @@ namespace BattleshipLite_Serveur
                     Console.Clear();
                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
 
-
-
+                    //TODO: #2 Si un joueur touche il rejoue
                     // Jeu
                     Joueur? winner;
                     while (partie.EnCours)
@@ -142,7 +171,7 @@ namespace BattleshipLite_Serveur
                                     Console.WriteLine("Au tour du client.");
                                     partie.Joueurs[0].VerifCoup(connexion, partie.Joueurs[0].Plateau);
                                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
-                                    
+
                                 }
                             }
                         }

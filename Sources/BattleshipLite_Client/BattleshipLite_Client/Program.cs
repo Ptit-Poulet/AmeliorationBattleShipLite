@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -36,12 +37,33 @@ namespace BattleshipLite_Client
             {
 
                 //Début partie
-                Console.WriteLine("\nLe serveur place son bateau...");
                 Thread.Sleep(1000);
-
+                Console.WriteLine("le serveur défini les dimensions du plateau de jeu...");
                 Partie partie = new();
                 Bateau bateau = new("Kayak", new List<Case>());
 
+
+                string confirmation = "";
+                do
+                {
+                    string dimension = conn.Recois(conn._sender);
+                    do
+                    {
+                        Console.WriteLine(dimension);
+                        confirmation = Console.ReadLine();
+
+                    }
+                    while (confirmation.ToUpper() != "O" && confirmation.ToUpper() != "N");
+                    if (confirmation.ToUpper() == "O")
+                    {
+                        Console.WriteLine("Dimensions confirmés !\n");
+                    }
+
+                    conn.Envoi(conn._sender, confirmation);
+
+                } while (confirmation.ToUpper() == "N");
+
+                Console.WriteLine("\nLe serveur place son bateau...");
 
                 // Réception du plateau du serveur
                 string json = conn.Recois(conn._sender);
@@ -99,8 +121,6 @@ namespace BattleshipLite_Client
                         Console.WriteLine("Au tour du serveur.");
                         partie.Joueurs[0].VerifCoup(conn, partie.Joueurs[0].Plateau);
                         Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
-                        //TODO légende 
-                       
 
                         if (!partie.CheckIfWinner(partie, out winner))
                         {
@@ -117,7 +137,7 @@ namespace BattleshipLite_Client
                                 {
                                     Affichage.PrintLegende();
                                     Console.WriteLine("Jouez votre coup: ");
-                                    
+
                                     coup = Console.ReadLine();
 
                                     coupValide = Partie.IsValidCoordinate(coup) && partie.Joueurs[0].JouerCoup(conn, partie.Joueurs[1].Plateau, coup);

@@ -127,25 +127,37 @@ namespace BattleshipLite_Client
             connexion.Envoi(connexion._sender, JsonSerializer.Serialize<Coup>(coupServeur));
         }
         /// <summary>
-        /// Place les bateaux sur le plateau
+        /// Place le bateau horizontalement ou verticalement sur le plateau
         /// </summary>
-        public bool PlacerBateauEnI(Bateau bateau, string case1, string case2)
+        public bool PlacerBateau(Bateau bateau, string case1, string case2)
         {
-            //TODO: Bateau en \ / et T T(inversé et coté) 
             Partie.ConvertToGrid(case1, out int x1, out int y1);
             Case _case1 = new Case(x1, y1);
 
             Partie.ConvertToGrid(case2, out int x2, out int y2);
             Case _case2 = new Case(x2, y2);
             // Vérifier que les deux cases sont valides (dans les limites du plateau)
-            if (IsPlacementValide(x1, y1) && IsPlacementValide(x2, y2))
+            if (IsPlacementValide(x1, y1) || IsPlacementValide(x2, y2))
             {
                 // Vérifier que les deux cases sont adjacentes soit horizontalement, soit verticalement
                 bool sontAdjacentes = (x1 == x2 && Math.Abs(y1 - y2) == 1) || (y1 == y2 && Math.Abs(x1 - x2) == 1);
                 //Pas la même case
                 bool pasPareil = (_case2 != _case1);
+                bool surAutreBateau = false;
+                foreach (Bateau bat in Plateau.Bateaux)
+                {
+                    foreach (Case c in bat.Positions)
+                    {
+                        if (c.X == _case1.X || c.Y == _case1.Y ||
+                        (c.X == _case2.X && c.Y == _case2.Y))
+                        {
+                            surAutreBateau = true;
+                            break;
+                        }
+                    }
+                } 
 
-                if (sontAdjacentes && pasPareil)
+                if (sontAdjacentes && pasPareil && !surAutreBateau)
                 {
                     List<Case> positionBateau = new List<Case>();
                     positionBateau.Add(_case1);
@@ -166,6 +178,68 @@ namespace BattleshipLite_Client
             else
             {
                 Console.WriteLine("Les coordonnées sont hors du plateau.");
+                return false;
+            }
+        }
+        /// <summary>
+        /// Place le bateau en diagonal sur le plateau
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="case1"></param>
+        /// <param name="case2"></param>
+        /// <param name="case3"></param>
+        /// <returns></returns>
+        public bool PlacerBateau(Bateau b, string case1, string case2, string case3)
+        {
+            Partie.ConvertToGrid(case1, out int x1, out int y1);
+            Case _case1 = new Case(x1, y1);
+            Partie.ConvertToGrid(case2, out int x2, out int y2);
+            Case _case2 = new Case(x2, y2);
+            Partie.ConvertToGrid(case3, out int x3, out int y3);
+            Case _case3 = new Case(x3, y3);
+
+            if (!IsPlacementValide(x1, y1) || !IsPlacementValide(x2, y2) || !IsPlacementValide(x3, y3))
+            {
+                Console.WriteLine("Les coordonnées sont hors du plateau.");
+                return false;
+            }
+            bool sontAdjacantesDescendentes = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y - 1 &&
+                                    _case2.X == _case3.X - 1 && _case2.Y == _case3.Y - 1);
+
+            bool sontAdjacantesMontantes = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y - 1 &&
+                                                _case2.X == _case3.X + 1 && _case2.Y == _case3.Y - 1);
+
+            bool pasPareil = (_case1 != _case2 && _case2 != _case3 && _case1 != _case3);
+            bool surAutreBateau = false;
+            foreach (Bateau bat in Plateau.Bateaux)
+            {
+                foreach(Case c in bat.Positions)
+                {
+                    if (c.X == _case1.X || c.Y == _case1.Y ||
+                        (c.X == _case2.X && c.Y == _case2.Y) ||
+                        (c.X == _case3.X && c.Y == _case3.Y))
+                    {
+                        surAutreBateau = true;
+                        break;
+                    }
+                }
+            }
+
+            if (pasPareil && (sontAdjacantesDescendentes || sontAdjacantesMontantes) && !surAutreBateau)
+            {
+                List<Case> positionBateau = new List<Case>();
+                positionBateau.Add(_case1);
+                positionBateau.Add(_case2);
+                positionBateau.Add(_case3);
+
+                b.PlacerBateau(positionBateau);
+                Plateau.Bateaux.Add(b);
+                Console.WriteLine($"Bateau placé en {case1}, {case2} et {case3}");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Le bateau ne peux pas être placé de cette manière sur le plateau.");
                 return false;
             }
         }

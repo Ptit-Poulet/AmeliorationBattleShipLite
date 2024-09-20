@@ -32,7 +32,7 @@ namespace BattleshipLite_Serveur
                     bool confirmation = false;
                     int hauteur = 0, largeur = 0;
 
-
+                    //TODO: mettre légende dimension égal nb bateau
                     do
                     {
                         Console.WriteLine("Entrez les dimensions du plateau de jeu.\n");
@@ -77,36 +77,98 @@ namespace BattleshipLite_Serveur
 
                     //TODO: #3 avoir 3 bateaux
                     //Placement bateau
-                    Bateau bateau = new("Kayak", new List<Case>());
-
-                    Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
-                    bool estPlace = false;
-                    string devant, derriere;
-
-                    do
+                    List<Bateau> Bateaux = new List<Bateau>();
+                    Bateau bateau = new("Torpilleur", new List<Case>());
+                    Bateaux.Add(bateau);
+                    if (hauteur > 10 &&hauteur < 19 &&  largeur > 10 && largeur < 19 )
                     {
-                        Console.WriteLine("Veuillez placer le devant de votre bateau: ");
-                        devant = Console.ReadLine();
-                        Console.WriteLine("Veuillez placer le derrière de votre bateau: ");
-                        derriere = Console.ReadLine();
+                        Bateau bateau2 = new("Sous-marin", new List<Case>());
+                        Bateaux.Add(bateau2);
 
-                        if (Partie.IsValidCoordinate(devant) && Partie.IsValidCoordinate(derriere))
-                        {
-                            estPlace = partie.Joueurs[0].PlacerBateauEnI(bateau, devant, derriere);
-                            if (!estPlace)
-                            {
-                                Console.WriteLine("Erreur de placement du bateau. Veuillez réessayer.");
-                                Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Coordonnées invalides.");
-                        }
+                    }
 
-                    } while (!estPlace);
+                    if(hauteur > 19 && hauteur < 27 && largeur > 19 && largeur < 27)
+                    {
+                        Bateau bateau3 = new("Porte-avions", new List<Case>());
+                        Bateaux.Add(bateau3);
+
+                    }
 
                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                    string devant, milieu, derriere;
+                    //TODO: mettre légende placement bateau
+                    for (int i = 0; i < Bateaux.Count; i++)
+                    {
+                        bool estPlace = false;
+                        Console.WriteLine($"Placement de votre {Bateaux[i].Nom}");
+                        if (Bateaux[i].Nom == "Torpilleur")
+                        {
+                            do
+                            {
+                                Console.WriteLine("Veuillez placer le devant de votre bateau: ");
+                                devant = Console.ReadLine();
+                                Console.WriteLine("Veuillez placer le derrière de votre bateau: ");
+                                derriere = Console.ReadLine();
+
+                                if (Partie.IsValidCoordinate(devant) && Partie.IsValidCoordinate(derriere))
+                                {
+                                    estPlace = partie.Joueurs[0].PlacerBateau(Bateaux[i], devant, derriere);
+                                    if (!estPlace)
+                                    {
+                                        Console.WriteLine("Erreur de placement du bateau. Veuillez réessayer.");
+                                        Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Coordonnées invalides.");
+                                }
+
+                            } while (!estPlace);
+
+                            Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                        }
+
+                        if (Bateaux[i].Nom == "Sous-marin")
+                        {
+                            do
+                            {
+
+                                Console.WriteLine("Veuillez placer le devant de votre bateau: ");
+                                devant = Console.ReadLine();
+                                Console.WriteLine("Veuillez placer le milieu de votre bateau: ");
+                                milieu = Console.ReadLine();
+                                Console.WriteLine("Veuillez placer le derrière de votre bateau: ");
+                                derriere = Console.ReadLine();
+
+                                if (Partie.IsValidCoordinate(devant) && Partie.IsValidCoordinate(milieu) && Partie.IsValidCoordinate(derriere))
+                                {
+                                    estPlace = partie.Joueurs[0].PlacerBateau(Bateaux[i], devant, milieu, derriere);
+                                    if (!estPlace)
+                                    {
+                                        Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Coordonnées invalides.");
+                                }
+                            } while (!estPlace);
+
+                            Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+
+                        }
+
+                        if (Bateaux[i].Nom == "Porte-avions")
+                        {
+                            do
+                            {
+
+                            } while (!estPlace);
+                            Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                        }
+                    }
 
                     // Envoyer le plateau du serveur au client
                     //Le break permet de détecter que le client s'est déconnecté

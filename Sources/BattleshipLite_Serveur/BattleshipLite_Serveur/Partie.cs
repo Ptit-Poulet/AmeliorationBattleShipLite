@@ -128,7 +128,6 @@ namespace BattleshipLite_Serveur
         {
             coord = coord.ToUpper();
 
-
             // Séparer les lettres et les chiffres
             string columnPart = string.Empty;
             string rowPart = string.Empty;
@@ -145,18 +144,17 @@ namespace BattleshipLite_Serveur
                 }
             }
 
-            // Convertir la colonne de A, B, ... en un index 0 basé
+            // Convertir la colonne de A, B, ... en un index basé sur 0
             x = 0;
             for (int i = 0; i < columnPart.Length; i++)
             {
                 x *= 26;
                 x += (columnPart[i] - 'A' + 1);
             }
-            x--; // Ajuster pour 0-based
+            x--; // Ajuster pour 0-based après le calcul complet
 
             // Convertir la ligne en entier et ajuster pour 0-based
             y = int.Parse(rowPart) - 1;
-
         }
     }
 }

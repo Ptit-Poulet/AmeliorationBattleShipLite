@@ -16,12 +16,11 @@ namespace BattleshipLite_Client
         // [x] = exploré touché (blanc)
         // [o] = mon bateau (vert)
 
-
         /// <summary>
         /// printer le plateau enemi
         /// </summary>
         /// <param name="lePlateau"></param>
-        public static void PrintPlateauEnemi(Plateau lePlateau)
+        public static void PrintPlateauEnnemi(Plateau lePlateau)
         {
             int largeurTableau = lePlateau.Largeur;
             int hauteurTableau = lePlateau.Hauteur;
@@ -163,7 +162,41 @@ namespace BattleshipLite_Client
             Console.Write("["); ColorChar('x', ConsoleColor.White); Console.Write("] = Eau touchée\n");
             Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("] = Votre bateau\n");
 
-           
+
+        }
+        /// <summary>
+        /// Print les placements possibles
+        /// </summary>
+        public static void PrintBateau(Bateau b)
+        {
+
+            Console.WriteLine("\nLégende : ");
+            if (b.Nom == "Torpilleur")
+            {
+                Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.WriteLine("ou\n");
+                Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+            }
+            else if(b.Nom == "Sous-marin")
+            {
+                Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("  ["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("    ["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.WriteLine("ou\n");
+                Console.Write("    ["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("  ["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+
+            }
+            else if(b.Nom == "Porte-avions")
+            {
+                Console.Write("Case devant = ["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("\t["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+
+            }
+
+
         }
 
         /// <summary>
@@ -172,12 +205,12 @@ namespace BattleshipLite_Client
         /// <param name="partie"></param>
         public static void MessageVictoire(Joueur winner, Partie partie)
         {
-            
+
             PrintMonPlateau(partie.Joueurs[0].Plateau);
-            PrintPlateauEnemi(partie.Joueurs[1].Plateau);
+            PrintPlateauEnnemi(partie.Joueurs[1].Plateau);
             if (winner == partie.Joueurs[0])
             {
-                ColorString($"\n\nVous avez gagné ! Tous les bateaux de votre adversaire sont coulés !\n", ConsoleColor.Green); 
+                ColorString($"\n\nVous avez gagné ! Tous les bateaux de votre adversaire sont coulés !\n", ConsoleColor.Green);
             }
             else ColorString("\n\nVous avez perdu, tous vos bateaux sont coulés...\n", ConsoleColor.Red);
 

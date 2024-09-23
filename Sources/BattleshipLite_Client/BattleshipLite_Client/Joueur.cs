@@ -243,6 +243,55 @@ namespace BattleshipLite_Client
                 return false;
             }
         }
+        public bool PlacerBateau(Bateau b, string case1)
+        {
+            Partie.ConvertToGrid(case1, out int x1, out int y1);
+            Case _case1 = new Case(x1, y1);
+            Case _case2 = new Case(x1, y1 + 1);
+            Case _case3 = new Case(x1 - 1, y1);
+            Case _case4 = new Case(x1 + 1, y1 + 1);
+
+            if ((!IsPlacementValide(x1, y1)) || (!IsPlacementValide(_case2.X, _case2.Y)) || (!IsPlacementValide(_case3.X, _case3.Y) || (!IsPlacementValide(_case4.X, _case4.Y))))
+            {
+                Console.WriteLine("Les coordonnées sont hors du plateau.");
+                return false;
+            }
+
+            bool surAutreBateau = false;
+            foreach (Bateau bat in Plateau.Bateaux)
+            {
+                foreach (Case c in bat.Positions)
+                {
+                    if (c.X == _case1.X || c.Y == _case1.Y ||
+                       (c.X == _case2.X && c.Y == _case2.Y) ||
+                       (c.X == _case3.X && c.Y == _case3.Y) ||
+                       (c.X == _case4.X && c.Y == _case4.Y))
+                    {
+                        surAutreBateau = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!surAutreBateau)
+            {
+                List<Case> positionBateau = new List<Case>();
+                positionBateau.Add(_case1);
+                positionBateau.Add(_case2);
+                positionBateau.Add(_case3);
+                positionBateau.Add(_case4);
+
+                b.PlacerBateau(positionBateau);
+                Plateau.Bateaux.Add(b);
+                Console.WriteLine($"Bateau placé sur la case {case1} et ses cases adjacentes. ");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Le bateau ne peux pas être placé de cette manière sur le plateau.");
+                return false;
+            }
+        }
         public bool IsPlacementValide(int x, int y)
         {
             if (x >= 0 && x < Plateau.Hauteur && y >= 0 && y < Plateau.Largeur)

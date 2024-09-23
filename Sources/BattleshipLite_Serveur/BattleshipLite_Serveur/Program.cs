@@ -75,19 +75,18 @@ namespace BattleshipLite_Serveur
                     // Démarrer la partie 
                     partie.Demarrer(ref partie, hauteur, largeur);
 
-                    //TODO: #3 avoir 3 bateaux
                     //Placement bateau
                     List<Bateau> Bateaux = new List<Bateau>();
                     Bateau bateau = new("Torpilleur", new List<Case>());
                     Bateaux.Add(bateau);
-                    if (hauteur > 10 &&hauteur < 19 &&  largeur > 10 && largeur < 19 )
+                    if (hauteur > 6 &&hauteur < 27 &&  largeur > 6 && largeur < 27 )
                     {
                         Bateau bateau2 = new("Sous-marin", new List<Case>());
                         Bateaux.Add(bateau2);
 
                     }
 
-                    if(hauteur > 19 && hauteur < 27 && largeur > 19 && largeur < 27)
+                    if(hauteur > 8 && hauteur < 27 && largeur > 8 && largeur < 27)
                     {
                         Bateau bateau3 = new("Porte-avions", new List<Case>());
                         Bateaux.Add(bateau3);
@@ -96,11 +95,12 @@ namespace BattleshipLite_Serveur
 
                     Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
                     string devant, milieu, derriere;
-                    //TODO: mettre légende placement bateau
+                  
                     for (int i = 0; i < Bateaux.Count; i++)
                     {
                         bool estPlace = false;
                         Console.WriteLine($"Placement de votre {Bateaux[i].Nom}");
+                        Affichage.PrintBateau(Bateaux[i]);
                         if (Bateaux[i].Nom == "Torpilleur")
                         {
                             do
@@ -164,6 +164,22 @@ namespace BattleshipLite_Serveur
                         {
                             do
                             {
+                                Console.WriteLine("Veuillez placer le devant de votre bateau: ");
+                                devant = Console.ReadLine();
+
+                                if (Partie.IsValidCoordinate(devant))
+                                {
+                                    estPlace = partie.Joueurs[0].PlacerBateau(Bateaux[i], devant);
+                                    if (!estPlace)
+                                    {
+                                        Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
+                                    }
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Coordonnées invalides.");
+                                }
 
                             } while (!estPlace);
                             Affichage.PrintMonPlateau(partie.Joueurs[0].Plateau);
@@ -207,7 +223,7 @@ namespace BattleshipLite_Serveur
                             Coup ContinueTour = new();
 
                             //Envoi coup
-                            Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
+                            Affichage.PrintPlateauEnnemi(partie.Joueurs[1].Plateau);
                             if (!partie.CheckIfWinner(partie, out winner))
                             {
 
@@ -230,7 +246,7 @@ namespace BattleshipLite_Serveur
 
                                     } while (!coupValide);
 
-                                    Affichage.PrintPlateauEnemi(partie.Joueurs[1].Plateau);
+                                    Affichage.PrintPlateauEnnemi(partie.Joueurs[1].Plateau);
                                     ContinueTour = partie.Joueurs[0].Coups.Last();
 
                                     if (ContinueTour.EstReussi && !partie.CheckIfWinner(partie, out winner))

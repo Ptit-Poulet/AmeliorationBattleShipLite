@@ -41,10 +41,12 @@ namespace BattleshipLite_Client
                 Console.WriteLine("le serveur défini les dimensions du plateau de jeu...");
 
                 Partie partie = new();
+                int dimMinB2 = 4, dimMinB3 = 8;
 
                 string confirmation = "";
                 do
                 {
+                    Console.WriteLine($"Plus grand que [{dimMinB2}x{dimMinB2}] = 2 bateaux,\nPlus grand que [{dimMinB3}x{dimMinB3}] = 3 bateaux.");
                     string dimension = conn.Recois(conn._sender);
                     do
                     {
@@ -87,13 +89,13 @@ namespace BattleshipLite_Client
                 int h = partie.Joueurs[1].Plateau.Hauteur,
                    l = partie.Joueurs[1].Plateau.Largeur;
 
-                if (h > 6 && h < 27 && l > 6 && l < 27)
+                if (h > dimMinB2 && h < 27 && l > dimMinB2 && l < 27)
                 {
                     Bateau bateau2 = new("Sous-marin", new List<Case>());
                     Bateaux.Add(bateau2);
 
                 }
-                if (h > 8 && h < 27 && l > 8 && l < 27)
+                if (h > dimMinB3 && h < 27 && l > dimMinB3 && l < 27)
 
                 {
                     Bateau bateau3 = new("Porte-avions", new List<Case>());

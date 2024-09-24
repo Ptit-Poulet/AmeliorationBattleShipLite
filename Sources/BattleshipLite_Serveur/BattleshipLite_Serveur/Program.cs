@@ -31,11 +31,11 @@ namespace BattleshipLite_Serveur
                     Partie partie = new();
                     bool confirmation = false;
                     int hauteur = 0, largeur = 0;
-
-                    //TODO: mettre légende dimension égal nb bateau
+                    int dimMinB2 = 4, dimMinB3 = 8;
                     do
                     {
                         Console.WriteLine("Entrez les dimensions du plateau de jeu.\n");
+                        Console.WriteLine($"Plus grand que [{dimMinB2}x{dimMinB2}] = 2 bateaux,\nPlus grand que [{dimMinB3}x{dimMinB3}] = 3 bateaux.");
                         int GetDimension(string dimensionName)
                         {
                             int dimension;
@@ -79,14 +79,14 @@ namespace BattleshipLite_Serveur
                     List<Bateau> Bateaux = new List<Bateau>();
                     Bateau bateau = new("Torpilleur", new List<Case>());
                     Bateaux.Add(bateau);
-                    if (hauteur > 6 &&hauteur < 27 &&  largeur > 6 && largeur < 27 )
+                    if (hauteur > dimMinB2 &&hauteur < 27 &&  largeur > dimMinB2 && largeur < 27 )
                     {
                         Bateau bateau2 = new("Sous-marin", new List<Case>());
                         Bateaux.Add(bateau2);
 
                     }
 
-                    if(hauteur > 8 && hauteur < 27 && largeur > 8 && largeur < 27)
+                    if(hauteur > dimMinB3 && hauteur < 27 && largeur > dimMinB3 && largeur < 27)
                     {
                         Bateau bateau3 = new("Porte-avions", new List<Case>());
                         Bateaux.Add(bateau3);

@@ -161,7 +161,7 @@ namespace BattleshipLite_Serveur
                 {
                     foreach (Case c in bat.Positions)
                     {
-                        if (c.X == _case1.X || c.Y == _case1.Y ||
+                        if ((c.X == _case1.X && c.Y == _case1.Y) ||
                         (c.X == _case2.X && c.Y == _case2.Y))
                         {
                             surAutreBateau = true;
@@ -196,7 +196,7 @@ namespace BattleshipLite_Serveur
         }
         public bool PlacerBateau(Bateau b, string case1, string case2, string case3)
         {
-            //TODO: Placement fonctionne pas 
+            //TODO: Test placementBateau hors et input order 
             Partie.ConvertToGrid(case1, out int x1, out int y1);
             Case _case1 = new Case(x1, y1);
             Partie.ConvertToGrid(case2, out int x2, out int y2);
@@ -212,9 +212,12 @@ namespace BattleshipLite_Serveur
 
             bool sontAdjacantesDescendentes = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y - 1 &&
                                      _case2.X == _case3.X - 1 && _case2.Y == _case3.Y - 1);
-
+            bool devantInverMontant = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y + 1 && 
+                                _case2.X == _case3.X + 1 && _case2.Y == _case3.Y + 1);
             bool sontAdjacantesMontantes = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y - 1 &&
                                                 _case2.X == _case3.X + 1 && _case2.Y == _case3.Y - 1);
+            bool devantInverDescend = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y + 1 &&
+                                                _case2.X == _case3.X - 1 && _case2.Y == _case3.Y + 1);
 
             bool pasPareil = (_case1 != _case2 && _case2 != _case3 && _case1 != _case3);
             bool surAutreBateau = false;
@@ -222,7 +225,7 @@ namespace BattleshipLite_Serveur
             {
                 foreach (Case c in bat.Positions)
                 {
-                    if (c.X == _case1.X || c.Y == _case1.Y ||
+                    if ((c.X == _case1.X && c.Y == _case1.Y) ||
                        (c.X == _case2.X && c.Y == _case2.Y) ||
                        (c.X == _case3.X && c.Y == _case3.Y))
                     {
@@ -232,7 +235,7 @@ namespace BattleshipLite_Serveur
                 }
             }
 
-            if (pasPareil && (sontAdjacantesDescendentes || sontAdjacantesMontantes) && !surAutreBateau)
+            if (pasPareil && (sontAdjacantesDescendentes || sontAdjacantesMontantes || devantInverDescend || devantInverMontant) && !surAutreBateau)
             {
                 List<Case> positionBateau = new List<Case>();
                 positionBateau.Add(_case1);
@@ -269,7 +272,7 @@ namespace BattleshipLite_Serveur
             {
                 foreach (Case c in bat.Positions)
                 {
-                    if (c.X == _case1.X || c.Y == _case1.Y ||
+                    if ((c.X == _case1.X && c.Y == _case1.Y )||
                        (c.X == _case2.X && c.Y == _case2.Y) ||
                        (c.X == _case3.X && c.Y == _case3.Y) ||
                        (c.X == _case4.X && c.Y == _case4.Y))

@@ -192,7 +192,7 @@ namespace BattleshipLite_Client
             else if(b.Nom == "Porte-avions")
             {
                 Console.Write("Case devant = ["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
-                Console.Write("\t["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("\t      ["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
 
             }
 

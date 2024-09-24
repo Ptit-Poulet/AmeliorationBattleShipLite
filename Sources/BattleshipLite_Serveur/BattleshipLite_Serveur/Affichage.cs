@@ -168,7 +168,6 @@ namespace BattleshipLite_Serveur
         /// </summary>
         public static void PrintBateau(Bateau b)
         {
-            //TODO: Aestitecly pleasing
             Console.WriteLine("\nLégende : ");
             if (b.Nom == "Torpilleur")
             {
@@ -191,7 +190,7 @@ namespace BattleshipLite_Serveur
             else if (b.Nom == "Porte-avions")
             {
                 Console.Write("Case devant = ["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
-                Console.Write("\t["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
+                Console.Write("\t      ["); ColorChar('o', ConsoleColor.Green); Console.Write("]"); Console.Write("["); ColorChar('o', ConsoleColor.Green); Console.Write("]\n");
 
             }
 

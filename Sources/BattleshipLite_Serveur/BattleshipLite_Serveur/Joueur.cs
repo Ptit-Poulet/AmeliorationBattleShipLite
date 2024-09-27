@@ -212,10 +212,13 @@ namespace BattleshipLite_Serveur
 
             bool sontAdjacantesDescendentes = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y - 1 &&
                                      _case2.X == _case3.X - 1 && _case2.Y == _case3.Y - 1);
+
             bool devantInverMontant = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y + 1 && 
                                 _case2.X == _case3.X + 1 && _case2.Y == _case3.Y + 1);
+
             bool sontAdjacantesMontantes = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y - 1 &&
                                                 _case2.X == _case3.X + 1 && _case2.Y == _case3.Y - 1);
+
             bool devantInverDescend = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y + 1 &&
                                                 _case2.X == _case3.X - 1 && _case2.Y == _case3.Y + 1);
 

@@ -131,7 +131,6 @@ namespace BattleshipLite_Client
         /// </summary>
         public bool PlacerBateau(Bateau bateau, string case1, string case2)
         {
-            //TODO: Vérif same as Serveur
             Partie.ConvertToGrid(case1, out int x1, out int y1);
             Case _case1 = new Case(x1, y1);
 
@@ -206,11 +205,13 @@ namespace BattleshipLite_Client
             }
             bool sontAdjacantesDescendentes = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y - 1 &&
                                     _case2.X == _case3.X - 1 && _case2.Y == _case3.Y - 1);
+
             bool devantInverMontant = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y + 1 &&
                            _case2.X == _case3.X + 1 && _case2.Y == _case3.Y + 1);
 
             bool sontAdjacantesMontantes = (_case1.X == _case2.X + 1 && _case1.Y == _case2.Y - 1 &&
                                                 _case2.X == _case3.X + 1 && _case2.Y == _case3.Y - 1);
+
             bool devantInverDescend = (_case1.X == _case2.X - 1 && _case1.Y == _case2.Y + 1 &&
                                                 _case2.X == _case3.X - 1 && _case2.Y == _case3.Y + 1);
 
